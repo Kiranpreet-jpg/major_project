@@ -1,0 +1,133 @@
+@extends('main.dashboard')
+@section('main')
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Notes</h1>
+
+    <!-- DataTales Example -->
+    <!-- <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+
+            </div>
+        </div>
+    </div> -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Edit notes</h6>
+        </div>
+        <div class="card-body">
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+            @if ($message = Session::get('error'))
+            <div class="alert alert-danger
+             alert-dismissible fade show" role="alert">
+                <strong>Error!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @endif
+
+            @if (count($errors) > 0)
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{-- <strong>Whoops!</strong> There were some problems with your input required.<br><br> --}}
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+
+            </div>
+            @endif
+            <form method="post" action="{{ route('notes.update',$notes->id) }}">
+                @csrf
+                @method('PATCH')
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="notes-title">Title*</label>
+                        <input required type="text" class="form-control" value="{{ $notes->title }}" name="title">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="Description">Description</label>
+                        <input type="text" name="description" value="{{ $notes->description }}" class="form-control" value="{{ $notes->description }}" id="notes_description">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="course-name">Course Name*</label>
+                        <select required class="form-control" name="course_id">
+                            @foreach ($course as $courses)
+                            <option {{ $notes->course_id == $courses->id ? 'selected' : '' }} value="{{$courses->id}}">{{$courses->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="semester">Semester*</label>
+                        <select required name="semester" class="form-control" id="">
+                            <option {{ $notes->semester == 1 ? 'selected' : '' }} value="{{ $notes->semester }}">1</option>
+                            <option {{ $notes->semester == 2 ? 'selected' : '' }} value="{{ $notes->semester }}">2</option>
+                            <option {{ $notes->semester == 3 ? 'selected' : '' }} value="{{ $notes->semester }}">3</option>
+                            <option {{ $notes->semester == 4 ? 'selected' : '' }} value="{{ $notes->semester }}">4</option>
+                            <option {{ $notes->semester == 5 ? 'selected' : '' }} value="{{ $notes->semester }}">5</option>
+                            <option {{ $notes->semester == 6 ? 'selected' : '' }} value="{{ $notes->semester }}">6</option>
+                            <option {{ $notes->semester == 7 ? 'selected' : '' }} value="{{ $notes->semester }}">7</option>
+                            <option {{ $notes->semester == 8 ? 'selected' : '' }} value="{{ $notes->semester }}">8</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6" style="display:none;">
+                        <label for="teacher-name">Teacher Name*</label>
+                        <select required name="teacher_user_id" id="" class="form-control">
+                            @foreach($user as $users)
+                            <option value="{{$users->id}}" {{ Auth::user()->id == $users->id ? 'selected' : 'disabled'}}>{{$users->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div class="form-group">
+                            <label for="notes-document-file">Document</label>
+                            <input type="file" name="document" class="form-control-file">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="subject-name">Subject Name*</label>
+                        <select required name="subject_id" id="" class="form-control">
+                            @foreach($subject as $subjects)
+                            <option {{ $notes->subject_id == $subjects->id ? 'selected' : '' }} value="{{$subjects->id}}">{{$subjects->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="notes-upload-date">Upload Date*</label>
+                        <input required type="date" name="uploaded_date" value="{{$notes->uploaded_date}}" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="notes-upload-time">Upload Time*</label>
+                        <input required type="time" value="{{$notes->uploaded_time}}" name="uploaded_time" class="form-control">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
